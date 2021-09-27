@@ -11,12 +11,16 @@
 % -----------------------------------------------
 
 \documentclass{article}
+
+
 \usepackage[T1]{fontenc} % add special characters (e.g., umlaute)
 \usepackage[utf8]{inputenc} % set utf-8 as default input encoding
 \usepackage{ismir,amsmath,cite,url}
 \usepackage{graphicx}
 \usepackage{color}
+
 \def\lbd{}	% Flag to use correct LBD settings in the paper, please do not modify this line
+
 
 \usepackage{lineno}
 \linenumbers
@@ -24,7 +28,7 @@
 % Title. Please use IEEE-compliant title case when specifying the title here,
 % as it has implications for the copyright notice
 % ------
-\title{Paper template for ISMIR \conferenceyear\ LBD}
+\title{Lead sheet transcription}
 
 % Note: Please do NOT use \thanks or a \footnote in any of the author markup
 
@@ -37,16 +41,16 @@
 
 % Two addresses
 % --------------
-%\twoauthors
-%  {First author} {School \\ Department}
-%  {Second author} {Company \\ Address}
+\twoauthors
+ {Chris Donahue} {Stanford}
+ {Percy Liang} {Stanford}
 
 % Three addresses
 % --------------
-\threeauthors
-  {First Author} {Affiliation1 \\ {\tt author1@ismir.edu}}
-  {Second Author} {\bf Retain these fake authors in\\\bf submission to preserve the formatting}
-  {Third Author} {Affiliation3 \\ {\tt author3@ismir.edu}}
+% \threeauthors
+%   {First Author} {Affiliation1 \\ {\tt author1@ismir.edu}}
+%   {Second Author} {\bf Retain these fake authors in\\\bf submission to preserve the formatting}
+%   {Third Author} {Affiliation3 \\ {\tt author3@ismir.edu}}
 
 % Four or more addresses
 % OR alternative format for large number of co-authors
@@ -61,24 +65,55 @@
 
 % For the author list in the Creative Common license and PDF metadata, please enter author names. 
 % Please abbreviate the first names of authors and add 'and' between the second to last and last authors.
-\def\authorname{F. Author, S. Author, and T. Author}
+\def\authorname{C. Donahue and P. Liang}
 
 % Optional: To use hyperref, uncomment the following.
-%\usepackage[bookmarks=false,pdfauthor={\authorname},pdfsubject={\papersubject},hidelinks]{hyperref}
+\usepackage[bookmarks=false,pdfauthor={\authorname},pdfsubject={\papersubject},hidelinks]{hyperref}
 % Mind the bookmarks=false option; bookmarks are incompatible with ismir.sty.
 
 \sloppy % please retain sloppy command for improved formatting
 
 \begin{document}
 
-%
+
 \maketitle
-%
+
 \begin{abstract}
-The abstract should be placed at the top left column and should contain about 150-200 words. LBD submissions are submitted as extended abstracts and \textcolor{red}{should not be anonymized}. Please note that extended abstract is not a conference paper. Therefore, it will not be part of the official ISMIR 2021 proceedings, and should not be cited as such. 
+
+We present \emph{Sheet Sage}, 
+a system designed to transcribe Western multitrack music into \emph{lead sheets}: human-readable scores which indicate melody and harmony.\footnote{For music with vocals, lead sheets usually also include lyrics. Here we focus just on transcribing the melody and harmony.} 
+The potential use cases for reliable lead sheet transcription are broad and include music performance, education, interaction, recommendation, and generation.
+However, the problem is challenging because it involves many subtasks: beat tracking, key detection, chord recognition, and melody extraction. 
+A major obstacle is melody extraction which, 
+while arguably simpler for humans than chord recognition, 
+remains a challenging task within MIR. 
+Here we leverage recent advancements in audio pre-training to break new ground on this task, 
+resulting in a system which can reliably detect and transcribe the melody in multitrack recordings. 
+By combining this new melody extraction system with existing solutions to other subtasks, 
+Sheet Sage can transcribe recordings into score representations which echo the musical understanding of human experts.\footnote{Examples: \url{http://chrisdonahue.com/sheetsage-lbd}}
 \end{abstract}
-%
+
 \section{Introduction}\label{sec:introduction}
+
+In the Western music canon, 
+a musical composition can often be characterized by its melody and harmony. 
+This information can be depicted on a lead sheet---a musical score which contains the melody as notes on a staff and the harmony as chord names. 
+When interpreted by a musician, 
+a lead sheet can be used to perform recognizable renditions of existing pieces.
+Hence, for some music, a lead sheet represents the essence of its underlying composition.
+
+A system which reliably transcribes multitrack recordings into lead sheets could potentially enrich human music practice by
+decreasing the effort required for performing existing music, 
+which in turn may also increase engagement in music education. 
+Moreover, such a system could act as a preprocessing component for MIR pipelines which facilitate interaction, recommendation, source separation, and generation. 
+Despite the numerous potential benefits, 
+such a system does not currently exist as it requires ``everything but the kitchen sink'' for MIR: beat tracking, key detection, chord recognition, and melody extraction.
+
+both perform and understand their favorite songs, or teach 
+
+(1) more easily perform or understand their favorite songs, or (2)
+Moreover, such a system could act as a 
+While reliably transcribing multitrack music recordings into l
 
 This template includes all the information about formatting Late-Breaking Demo manuscripts for the ISMIR \conferenceyear\ Conference. Please follow these guidelines to give the final proceedings a uniform look. Most of the required formatting is achieved automatically by using the supplied
 style file (\LaTeX) or template (Word).
@@ -205,6 +240,14 @@ The number should be on the right side, in parentheses, as in \eqnref{relativity
 \begin{equation}\label{relativity}
 E=mc^{2}
 \end{equation}
+
+\section{Acknowledgements}
+
+% John Thickstun (for conversations)
+% John Hewitt (for conversations)
+% Nelson Liu (for tech support)
+% Megha Srivastava (for feedback)
+% Jen Hsu (for feedback)
 
 \section{Citations}
 
