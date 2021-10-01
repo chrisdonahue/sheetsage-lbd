@@ -1,0 +1,16 @@
+This package reproduces the quantitative evaluation from Donahue and Liang's ISMIR 2021 LBD submission.
+
+The quantitative evaluation is performed on excerpts from 10 songs from the RWC Pop and Genre databases (Goto et al. 2002, Goto et al. 2003). These excerpts were collected from the web demo of Ryynanen and Klapuri 2008: https://web.archive.org/web/20081115212058/http://www.cs.tut.fi/sgn/arg/matti/demos/mbctrans/
+
+"Eval.ipynb" will run start to finish and should precisely reproduce the numbers from our LBD submission precisely.
+
+Description of other files:
+	- "ryy08/wayback": Inputs and outputs from Ryynanen and Klapuri 2008, directly downloaded from the internet archive URL above
+	- "ryy08/sync.json": Contains the offset, duration, and beat timestamps for a few bars from each excerpt. Beat timestamps were computed by madmom (Bock et al. 2016) and manually verified. Offsets were chosen as downbeats constituting the start of a phrase.
+	- "ryy08/ref.json": Reference scores for each of the excerpts manually transcribed by Chris Donahue. Notes are a three-tuple of (start, duration, MIDI pitch) where start and duration are in sixteenth notes. Sixteenth note 0 coincides with the offset in "sync.json"
+	- "ryy08/est_unquant_midi": MIDI file transcriptions of melodies from the following methods:
+		- "ryy": Transcriptions from Klapuri and Ryynanen, created by running the MP3 files with the transcribed melodies through Onsets and Frames (Hawthorne et al. 2017) via https://chrisdonahue.com/piano-transcribe-batch/
+		- "mel": Transcriptions from Justin Salamon's `audio_to_midi_melodia`: https://github.com/justinsalamon/audio_to_midi_melodia
+		- "ssh": Sheet Sage using handcrafted features as input
+		- "ssj": Sheet Sage using Jukebox features as input
+	- "ryy08/ref_unquant_midi": The unquantized transcriptions used to create ref.json. NOTE that Ableton produced some sync issues with these files. You can probably ignore these MIDI files but they're included for reference.
