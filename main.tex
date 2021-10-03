@@ -28,7 +28,10 @@
 % Title. Please use IEEE-compliant title case when specifying the title here,
 % as it has implications for the copyright notice
 % ------
-\title{Lead sheet transcription}
+\title{
+%Transcribing multitrack music audio into lead sheets
+Sheet Sage: Lead Sheets from Music Audio
+}
 
 % Note: Please do NOT use \thanks or a \footnote in any of the author markup
 
@@ -71,6 +74,9 @@
 \usepackage[bookmarks=false,pdfauthor={\authorname},pdfsubject={\papersubject},hidelinks]{hyperref}
 % Mind the bookmarks=false option; bookmarks are incompatible with ismir.sty.
 
+\usepackage{cleveref}
+\usepackage{booktabs}
+
 \sloppy % please retain sloppy command for improved formatting
 
 \begin{document}
@@ -80,209 +86,186 @@
 
 \begin{abstract}
 
-We present \emph{Sheet Sage}, 
-a system designed to transcribe Western multitrack music into \emph{lead sheets}: human-readable scores which indicate melody and harmony.\footnote{For music with vocals, lead sheets usually also include lyrics. Here we focus just on transcribing the melody and harmony.} 
-The potential use cases for reliable lead sheet transcription are broad and include music performance, education, interaction, recommendation, and generation.
-However, the problem is challenging because it involves many subtasks: beat tracking, key detection, chord recognition, and melody extraction. 
-A major obstacle is melody extraction which, 
+We present Sheet Sage, 
+a system designed to transcribe Western multitrack music into lead sheets: human-readable scores which indicate melody and harmony. 
+%\footnote{For music with vocals, lead sheets usually also include lyrics. Here we focus just on transcribing the melody and harmony.} 
+The potential use cases for reliable lead sheet transcription are broad and include 
+music performance, 
+education, 
+interaction, 
+informatics, 
+and generation. 
+However, the task is challenging because it involves many subtasks: 
+beat tracking, 
+key detection, 
+chord recognition,
+and melody transcription. 
+A major obstacle is melody transcription which, 
 while arguably simpler for humans than chord recognition, 
-remains a challenging task within MIR. 
+remains a challenging task for MIR. 
 Here we leverage recent advancements in audio pre-training to break new ground on this task, 
 resulting in a system which can reliably detect and transcribe the melody in multitrack recordings. 
-By combining this new melody extraction system with existing solutions to other subtasks, 
+By combining this new melody transcription approach with existing strategies for other subtasks, 
 Sheet Sage can transcribe recordings into score representations which echo the musical understanding of human experts.\footnote{Examples: \url{http://chrisdonahue.com/sheetsage-lbd}}
 \end{abstract}
 
 \section{Introduction}\label{sec:introduction}
 
+\begin{figure*}
+    \centering
+    \includegraphics[width=\linewidth]{figs/one.pdf}
+    \caption{Inference procedure for Sheet Sage, our proposed system which transcribes multitrack audio into lead sheets (scores which depict melody as notes and harmony as chord names). The blue, green, and yellow boxes respectively take audio, features, and symbolic music data as input. Green boxes are modules that we built as part of this work---both are Transformers~\cite{vaswani2017attention} trained on their respective tasks using audio features from Jukebox~\cite{dhariwal2020jukebox} and data from Hooktheory~\cite{hooktheory}.}
+    \label{fig:one}
+\end{figure*}
+
 In the Western music canon, 
 a musical composition can often be characterized by its melody and harmony. 
-This information can be depicted on a lead sheet---a musical score which contains the melody as notes on a staff and the harmony as chord names. 
-When interpreted by a musician, 
-a lead sheet can be used to perform recognizable renditions of existing pieces.
+% This information can be depicted on a lead sheet---a musical score which contains the melody as notes on a staff and the harmony as chord names. 
+% When interpreted by a musician, 
+% a lead sheet can be used to perform recognizable renditions of existing pieces.
+When engraved as a \emph{lead sheet}---a musical score containing the melody as notes on a staff and the harmony as chord names---melody and harmony can be readily interpreted by musicians, enabling recognizable performances of existing pieces. 
 Hence, for some music, a lead sheet represents the essence of its underlying composition.
 
 A system which reliably transcribes multitrack recordings into lead sheets could potentially enrich human music practice by
-decreasing the effort required for performing existing music, 
-which in turn may also increase engagement in music education. 
-Moreover, such a system could act as a preprocessing component for MIR pipelines which facilitate interaction, recommendation, source separation, and generation. 
+decreasing the effort required for performing existing pieces, 
+which in turn might also increase engagement in music education through curricula tailored to student preferences. 
+Moreover, such a system could act as a preprocessing component for MIR pipelines to help facilitate 
+interaction~\cite{},
+informatics~\cite{bainbridge1999towards}, 
+retrieval~\cite{}, 
+source separation~\cite{ewert2014score}, 
+and generation~\cite{hawthorne2019enabling}. 
 Despite the numerous potential benefits, 
-such a system does not currently exist as it requires ``everything but the kitchen sink'' for MIR: beat tracking, key detection, chord recognition, and melody extraction.
+to the best of our knowledge such a system does not currently exist, 
+and building one is challenging as it amounts to the amalgamation of many difficult MIR tasks: 
+beat tracking, 
+key detection, 
+chord recognition, 
+and melody transcription.
 
-both perform and understand their favorite songs, or teach 
+Among these tasks, 
+\emph{melody transcription}---defined here as converting multitrack audio to a time-aligned, monophonic sequence of equal-tempered notes constituting its melody---is arguably the furthest from a reliable solution. 
+A closely-related problem that has received considerable attention in MIR is \emph{melody extraction}~\cite{goto2000robust}, 
+which involves estimating the time-varying fundamental frequency trajectory of the melody in multitrack audio (see~\cite{salamon2014melody} for a comprehensive review). 
+While melody extraction is useful for several downstream tasks and is more inclusive of music which does not use equal temperament, 
+its outputs cannot be readily converted into familiar music formats like MIDI or scores. 
+It is possible to segment the outputs of melody extraction into notes~\cite{nishikimi2016musical}, 
+however it stands to reason that directly transcribing audio could sidestep the pitfalls of pipeline-based approaches. 
+% While melody transcription is possible by segmenting the outputs of melody extraction into notes~\cite{nishikimi2016musical}, 
+% it stands to reason that transcribing the melody from audio could outperform pipeline-based approaches.
 
-(1) more easily perform or understand their favorite songs, or (2)
-Moreover, such a system could act as a 
-While reliably transcribing multitrack music recordings into l
+In this work, we break new ground on melody transcription by combining advancements in audio pre-training with a large collection of labeled data for this task. 
+Specifically, we collect and align around $50$ hours of paired audio segments and human-transcribed melodies from Hooktheory~\cite{hooktheory}. 
+To model this dataset effectively, 
+we leverage audio representations from Jukebox~\cite{dhariwal2020jukebox}, 
+a generative model pre-trained on one million multitrack recordings. 
+These representations were recently shown to be powerful features for several MIR tasks~\cite{castellon2021calm}, 
+and here we demonstrate that they are also useful for the task of melody transcription---a Transformer~\cite{vaswani2017attention} trained on top of these audio representations achieves
+% 0.743 vs. 0.587
+$27\%$ 
+better performance on melody transcription 
+than the same architecture trained on traditional spectrogram features.
 
-This template includes all the information about formatting Late-Breaking Demo manuscripts for the ISMIR \conferenceyear\ Conference. Please follow these guidelines to give the final proceedings a uniform look. Most of the required formatting is achieved automatically by using the supplied
-style file (\LaTeX) or template (Word).
-If you have any questions, please contact the Program Committee (\texttt{ismir\conferenceyear-papers@ismir.net}).
-This template can be downloaded from the ISMIR \conferenceyear\ web site (\texttt{http://ismir\conferenceyear.ismir.net}).
-%
-\section{Paper Length \& File Size}
-We adopt a ``(2+1)-page policy'' for Late-Breaking Demo (LBD) papers in ISMIR 2021. That is, LBD papers are extended abstracts that may have a maximum of 2 pages of technical content (including figures and tables) \textcolor{red}{with one optional page that contains only references and acknowledgments.} 
+To complete \emph{Sheet Sage}, 
+our lead sheet transcription system, 
+we additionally train a chord recognition model using Jukebox representations and the Hooktheory dataset.
+Together, these two models give us estimated timestamps for melody note onsets and chord changes, i.e., a MIDI-like representation. 
+Rendering this information as a lead sheet requires additional information: key signature and metrical structure. 
+We estimate the former using the Krumhansl-Schmuckler algorithm~\cite{krumhansl1990cognitive,temperley1999key}, which takes the estimated melody and chord information as input. 
+For the latter, we use \texttt{madmom}~\cite{bock2016madmom,bock2016joint} to estimate timestamps of beats and downbeats, 
+which we then use to quantize the estimated melody and chord transcription to the nearest sixteenth note. 
+Finally, we engrave a lead sheet using Lilypond~\cite{nienhuys2003lilypond}. 
+See~\Cref{fig:one} for an overview of our system.
 
-Paper should be submitted as PDFs and the \textcolor{red}{file size is limited to 10MB}. Please compress images and figures as necessary before submitting.
+\section{Melody Transcription Evaluation}
 
-\section{Page Size}\label{sec:page_size}
+\newcommand{\tabquantrow}[7]{ #7 & #1 & #2 & #3 \\}
 
-The proceedings will be printed on
- \underline{portrait A4-size paper} \underline{(21.0cm x 29.7cm)}.
-All material on each page should fit within a rectangle of 17.2cm x 25.2cm,
-centered on the page, beginning 2.0cm
-from the top of the page and ending with 2.5cm from the bottom.
-The left and right margins should be 1.9cm.
-The text should be in two 8.2cm columns with a 0.8cm gutter.
-All text must be in a two-column format.
-Text must be fully justified.
+\begin{table}[t]
+\centering
+\begin{tabular}{l @{\hspace{1.25\tabcolsep}} c @{\hspace{1.25\tabcolsep}} c @{\hspace{1.25\tabcolsep}} c}
+\toprule
+Approach & $F_1$ & $P$ & $R$ \\
+\midrule
 
-\section{Typeset Text}\label{sec:typeset_text}
+% mel 0.28663762224714356 0.28386365399857477 0.2894663409916158 0.40869955139013564 0.3939042752379466 0.424649641577061
+\tabquantrow{$28.7$}{$28.4$}{$28.9$}{$40.9$}{$39.4$}{$42.5$}{Melody extraction~\cite{salamon2012melody} + Seg.}
 
-\subsection{Normal or Body Text}\label{subsec:body}
+% spt 0.37615494578146064 0.4339886306130625 0.33192265721093334 0.5576884462034533 0.5552788485277123 0.5601190476190476
+\tabquantrow{$37.6$}{$43.4$}{$33.2$}{$55.8$}{$55.5$}{$56.0$}{Vocal iso.~\cite{hennequin2020spleeter} + Transcribe~\cite{mauch2015computer}}
 
-Please use a 10pt (point) Times font. Sans-serif or non-proportional fonts
-can be used only for special purposes, such as distinguishing source code text.
+% spta 0.46801472954538414 0.47712661516151783 0.45924434901101074 0.5576884462034533 0.5552788485277123 0.5601190476190476
+\tabquantrow{$46.8$}{$47.7$}{$45.9$}{$55.8$}{$55.5$}{$56.0$}{~~~~Allow abstain for non-vocal}
 
-The first paragraph in each section should not be indented, but all other paragraphs should be.
+% ryy 0.4867368763278077 0.47900457777551503 0.49472290693071175 0.5949184396528961 0.5823602484472049 0.608030185077476
+\tabquantrow{$48.7$}{$47.9$}{$49.5$}{$59.5$}{$58.2$}{$60.8$}{Features + HMM~\cite{ryynanen2008automatic}}
 
-\subsection{Title and Authors}
+% ssh 0.6004892742711208 0.6347876689011206 0.5697072579915735 0.6844009173691797 0.6886709527441793 0.6801835075493612
+\tabquantrow{$60.0$}{$63.5$}{$57.0$}{$68.4$}{$68.9$}{$68.0$}{Spectro.~\cite{hawthorne2018onsets} + Transformer~\cite{vaswani2017attention}}
 
-The title is 14pt Times, bold, caps, upper case, centered.
-\textcolor{red}{Note that LBD screening process is single-blind, and the authors' names should not be anonymized.}
-Authors' names are centered.
-The lead author's name is to be listed first (left-most), and the co-authors' names after.
-If the addresses for all authors are the same, include the address only once, centered.
-If the authors have different addresses, put the addresses, evenly spaced, under each authors' name.
+% ssj 0.7496230224947461 0.74844514579763 0.7508046124376337 0.863281835547652 0.8343902092739303 0.8942460317460318
+\tabquantrow{$\mathbf{75.0}$}{$\mathbf{74.8}$}{$\mathbf{75.1}$}{$\mathbf{86.3}$}{$\mathbf{83.4}$}{$\mathbf{89.4}$}{Jukebox~\cite{dhariwal2020jukebox} + Transformer~\cite{vaswani2017attention}}
 
-\subsection{First Page Copyright Notice}
-
-Please include the copyright notice exactly as it appears here in the lower left-hand corner of the page.
-It is set in 8pt Times. \textcolor{red}{After your extended abstract is accepted, you will need to insert the appropriate author names and paper title in the copyright notice when submitting the camera-ready version.} For \LaTeX users, this will be handled by the template automatically. For Word users, this has to be done manually.
-
-
-\subsection{Page Numbering, Headers and Footers}
-
-Do not include headers, footers or page numbers in your submission.
-These will be added when the publications are assembled.
-
-\subsection{Line Numbers}
-
-Line numbers should be included in your originally submitted manuscript, for reference during screening. \textcolor{red}{However, after your extended abstract is accepted, you must remove all line numbers from the final camera-ready version.} This can be done in \LaTeX by commenting out the command \verb|\linenumbers| on Line 22. This can be done in Microsoft Word by selecting Layout > Line Numbers > None.
-
-\section{First Level Headings}
-
-First level headings are in Times 10pt bold,
-centered with 1 line of space above the section head, and 1/2 space below it.
-For a section header immediately followed by a subsection header, the space should be merged.
-
-\subsection{Second Level Headings}
-
-Second level headings are in Times 10pt bold, flush left,
-with 1 line of space above the section head, and 1/2 space below it.
-The first letter of each significant word is capitalized.
-
-\subsubsection{Third and Further Level Headings}
-
-Third level headings are in Times 10pt italic, flush left,
-with 1/2 line of space above the section head, and 1/2 space below it.
-The first letter of each significant word is capitalized.
-
-Using more than three levels of headings is highly discouraged.
-
-\section{Footnotes and Figures}
-
-\subsection{Footnotes}
-
-Indicate footnotes with a number in the text.\footnote{This is a footnote.}
-Use 8pt type for footnotes. Place the footnotes at the bottom of the page on which they appear.
-Precede the footnote with a 0.5pt horizontal rule.
-
-\subsection{Figures, Tables and Captions}
-
-All artwork must be centered, neat, clean, and legible.
-All lines should be very dark for purposes of reproduction and art work should not be hand-drawn.
-The proceedings are not in color, and therefore all figures must make sense in black-and-white form.
-Figure and table numbers and captions always appear below the figure.
-Leave 1 line space between the figure or table and the caption.
-Each figure or table is numbered consecutively. Captions should be Times 10pt.
-Place tables/figures in text as close to the reference as possible.
-References to tables and figures should be capitalized, for example:
-see \figref{fig:example} and \tabref{tab:example}.
-Figures and tables may extend across both columns to a maximum width of 17.2cm.
-
-\begin{table}
- \begin{center}
- \begin{tabular}{|l|l|}
-  \hline
-  String value & Numeric value \\
-  \hline
-  Hello ISMIR  & \conferenceyear \\
-  \hline
- \end{tabular}
-\end{center}
- \caption{Table captions should be placed below the table.}
- \label{tab:example}
+\bottomrule
+\end{tabular}
+\caption{Macro-averaged performance of different approaches for melody note onset transcription.}
+\label{tab:quantitative}
 \end{table}
 
-\begin{figure}
- \centerline{\framebox{
- \includegraphics[width=0.9\columnwidth]{figure.png}}}
- \caption{Figure captions should be placed below the figure.}
- \label{fig:example}
+Services like Chordify~\cite{de2014chordify} already demonstrate that it is possible to estimate all of the information needed for engraving lead sheets besides melody. 
+Hence, we focus on melody transcription for our evaluation of Sheet Sage. 
+To the best of our knowledge, 
+Paiva~et~al.~\cite{paiva2005detection} were the first to investigate melody transcription (as opposed to extraction). 
+The earliest work for which we could find code or audio examples was that of Ryyn{\"a}nen and Klapuri~\cite{ryynanen2008automatic}, 
+which provides example transcriptions from their HMM-based system for $10$ segments from the RWC Music Database~\cite{goto2002rwc}. 
+To facilitate direct comparison, 
+we base our quantitative evaluation on this small dataset. 
+
+\textbf{Metrics.} In our melody transcription setting where we care primarily about human readability, 
+we posit that correctly identifying note onsets, 
+
+Among metrics traditionally used to evaluate piano transcription, Ycart et al.~\cite{ycart2020investigating} demonstrate that onset-only note-level $F_1$ correlates most strongly with human judgements. 
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.95\linewidth]{figs/heuristic_offsets.pdf}
+    \caption{Engraving a melody with ground truth~(top) vs. heuristic~(bottom) note offsets. Compared to predicting onsets, we argue that predicting offsets is of secondary importance for human-readable melody transcription.}
+    \label{fig:heuristic_offsets}
 \end{figure}
 
-\section{Equations}
+For our lead sheet setting, 
+we argue that onsets are far m
 
-Equations should be placed on separate lines and numbered.
-The number should be on the right side, in parentheses, as in \eqnref{relativity}.
+See our examples page$^1$ for 
 
-\begin{equation}\label{relativity}
-E=mc^{2}
-\end{equation}
+% Assumptions regarding metrics:
+% For melody scores, note onset is most important
+% Offsets do not dramatically improve readability
+% Octave does not matter
+
+% Observations
+% Sometimes transcribes an instrument that humans do not
+% Can switch between instruments
+
+% Error analysis:
+% Doubled notes
+% Blows up on poor intonation
+
+% Drawbacks
+% Only 3/4 and 4/4
+
 
 \section{Acknowledgements}
 
-% John Thickstun (for conversations)
+% John Thickstun (for conversations / mido)
 % John Hewitt (for conversations)
 % Nelson Liu (for tech support)
 % Megha Srivastava (for feedback)
 % Jen Hsu (for feedback)
-
-\section{Citations}
-
-All bibliographical references should be listed at the end of the submission, in a section named ``REFERENCES,''
-numbered and in the order that they first appear in the text. Formatting in the REFERENCES section must conform to the
-IEEE standard (\url{https://ieeeauthorcenter.ieee.org/wp-content/uploads/IEEE-Reference-Guide.pdf}). Approved
-IEEE abbreviations (Proceedings $\rightarrow$ Proc.) may be used to shorten reference listings. All references listed
-should be cited in the text. When referring to documents, place the numbers in square brackets (e.g., \cite{ISMIR17Author:01}
-for a single reference, or \cite{JNMR10Someone:01,Book20Person:01,Chapter09Person:01} for a range).
+% Annie (for beaming)
 
 % For bibtex users:
 \bibliography{main}
-
-% For non bibtex users:
-%\begin{thebibliography}{citations}
-% \bibitem{Author:17}
-% E.~Author and B.~Authour, ``The title of the conference paper,'' in {\em Proc.
-% of the Int. Society for Music Information Retrieval Conf.}, (Suzhou, China),
-% pp.~111--117, 2017.
-%
-% \bibitem{Someone:10}
-% A.~Someone, B.~Someone, and C.~Someone, ``The title of the journal paper,''
-%  {\em Journal of New Music Research}, vol.~A, pp.~111--222, September 2010.
-%
-% \bibitem{Person:20}
-% O.~Person, {\em Title of the Book}.
-% \newblock Montr\'{e}al, Canada: McGill-Queen's University Press, 2021.
-%
-% \bibitem{Person:09}
-% F.~Person and S.~Person, ``Title of a chapter this book,'' in {\em A Book
-% Containing Delightful Chapters} (A.~G. Editor, ed.), pp.~58--102, Tokyo,
-% Japan: The Publisher, 2009.
-%
-%
-%\end{thebibliography}
 
 \end{document}
 
