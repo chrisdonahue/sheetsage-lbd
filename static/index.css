@@ -4,8 +4,12 @@ body {
   max-width: 1000px;
 }
 
-h1 {
+h2 {
   color: #373fff;
+}
+
+select {
+  font-size: 1em;
 }
 
 button {
