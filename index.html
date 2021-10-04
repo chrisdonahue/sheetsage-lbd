@@ -1,1 +1,146 @@
-Coming soon!
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/static/favicon_16.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/static/favicon_32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="48x48"
+      href="/static/favicon_48.png"
+    />
+
+    <title>Sheet Sage Examples</title>
+
+    <link rel="stylesheet" href="/static/index.css" />
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/jszip@3.7.1/dist/jszip.min.js"
+      defer
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"
+      defer
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/tone@14.7.77/build/Tone.min.js"
+      defer
+    ></script>
+
+    <script src="/static/index.js" defer></script>
+  </head>
+  <body>
+    <div id="main">
+      <div id="header">
+        <h2>
+          🎼 Sheet Sage 🧙 Sound Examples
+        </h2>
+        <h3>
+          <a href="https://chrisdonahue.com" target="_blank">Chris Donahue</a>
+          and
+          <a href="https://cs.stanford.edu/~pliang/" target="_blank"
+            >Percy Liang</a
+          >
+        </h3>
+        <p style="color:#cc0000;display:none;">
+          Note, this page is not optimized for small displays.
+        </p>
+      </div>
+
+      <div id="body-loading" class="spinner"></div>
+      <div id="body" style="display:none;">
+        <div id="choose-example">
+          <div id="fresh-cherry">
+            <h3>🍒 Examples transcribed by Sheet Sage</h3>
+            <template id="fresh-cherry-example">
+              <option></option>
+            </template>
+            <select id="fresh-cherries">
+              <option>Select an example...</option>
+            </select>
+          </div>
+
+          <div id="rotten-cherry">
+            <h3>🚧 Examples where Sheet Sage needs improvement</h3>
+            <template id="rotten-cherry-example">
+              <option></option>
+            </template>
+            <select id="rotten-cherries">
+              <option>Select an example...</option>
+            </select>
+          </div>
+
+          <div id="ryy08">
+            <h3>
+              🧪 Comparison with other methods (<a href="" target="_blank"
+                >download</a
+              >)
+            </h3>
+            <template id="ryy08-method">
+              <tr></tr>
+            </template>
+            <template id="ryy08-example">
+              <td><input type="radio" name="preview-example" /></td>
+            </template>
+            <table id="ryy08-table">
+              <thead>
+                <tr>
+                  <td></td>
+                  <td>1</td>
+                  <td>2</td>
+                  <td>3</td>
+                  <td>4</td>
+                  <td>5</td>
+                  <td>6</td>
+                  <td>7</td>
+                  <td>8</td>
+                  <td>9</td>
+                  <td>10</td>
+                </tr>
+              </thead>
+              <tbody id="ryy08-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="preview-loading" class="spinner"></div>
+        <div id="preview" style="display:none;">
+          <div id="audio-ui"></div>
+          <button id="audio-play">▶️ Audio Preview</button>
+          <label>Volume</label>
+          <input
+            type="range"
+            id="audio-volume"
+            min="0"
+            max="1000"
+            value="750"
+          />
+          <label>Crossfade </label>
+          <span>Input</span>
+          <input
+            type="range"
+            id="audio-crossfade"
+            min="0"
+            max="1000"
+            value="500"
+          />
+          <div>
+            <img id="score" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
