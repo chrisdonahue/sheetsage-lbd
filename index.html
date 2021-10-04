@@ -92,7 +92,7 @@
               <tr></tr>
             </template>
             <template id="ryy08-example">
-              <td><input type="radio" name="preview-example" /></td>
+              <td><input type="radio" name="ryy08-radio" /></td>
             </template>
             <table id="ryy08-table">
               <thead>
@@ -117,26 +117,34 @@
 
         <div id="preview-loading" class="spinner"></div>
         <div id="preview" style="display:none;">
-          <div id="audio-ui"></div>
-          <button id="audio-play">▶️ Audio Preview</button>
-          <label>Volume</label>
-          <input
-            type="range"
-            id="audio-volume"
-            min="0"
-            max="1000"
-            value="750"
-          />
-          <label>Crossfade </label>
-          <span>Input</span>
-          <input
-            type="range"
-            id="audio-crossfade"
-            min="0"
-            max="1000"
-            value="500"
-          />
-          <div>
+          <hr />
+          <div id="audio-ui">
+            <label>Audio Preview</label>
+            <div class="audio-transport" id="audio-play">
+              ▶️
+            </div>
+            <div class="audio-transport" id="audio-stop">
+              ⏹
+            </div>
+            <label>Volume</label>
+            <input
+              type="range"
+              id="audio-volume"
+              min="0"
+              max="1000"
+              value="750"
+            />
+            <label>Crossfade </label>
+            <span>Input</span>
+            <input
+              type="range"
+              id="audio-crossfade"
+              min="0"
+              max="1000"
+              value="500"
+            />
+          </div>
+          <div id="score-ui">
             <img id="score" />
           </div>
         </div>

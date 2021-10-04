@@ -51,25 +51,34 @@
 
     previewSpinnerEl.style.display = "block";
     previewEl.style.display = "none";
+    const now = tone.now();
+    AUDIO_INPUT.stop(now);
+    AUDIO_TRANSCRIPTION.stop(now);
 
-    const [
-      inputAudioMP3,
-      transcriptionAudioMP3,
-      transcriptionScorePNG
-    ] = await promises;
-    console.log(inputAudioMP3);
-    const inputAudio = `data:audio/mpeg;base64,${inputAudioMP3}`;
-    const transcriptionAudio = `data:audio/mpeg;base64,${transcriptionAudioMP3}`;
-    const transcriptionScore = `data:image/png;base64,${transcriptionScorePNG}`;
-    await Promise.all([
-      AUDIO_INPUT.load(inputAudio),
-      AUDIO_TRANSCRIPTION.load(transcriptionAudio)
-    ]);
-
-    document.getElementById("score").src = transcriptionScore;
+    let successful = false;
+    try {
+      const [
+        inputAudioMP3,
+        transcriptionAudioMP3,
+        transcriptionScorePNG
+      ] = await promises;
+      const inputAudio = `data:audio/mpeg;base64,${inputAudioMP3}`;
+      const transcriptionAudio = `data:audio/mpeg;base64,${transcriptionAudioMP3}`;
+      const transcriptionScore = `data:image/png;base64,${transcriptionScorePNG}`;
+      await Promise.all([
+        AUDIO_INPUT.load(inputAudio),
+        AUDIO_TRANSCRIPTION.load(transcriptionAudio)
+      ]);
+      document.getElementById("score").src = transcriptionScore;
+      successful = true;
+    } catch {
+      alert("Failed to load example for some reason. Please contact Chris.");
+    }
 
     previewSpinnerEl.style.display = "none";
-    previewEl.style.display = "block";
+    if (successful) {
+      previewEl.style.display = "block";
+    }
   }
 
   function ryy08Promises(method, rwcTag) {
@@ -133,9 +142,14 @@
 
     // Initialize audio UI
     document.getElementById("audio-play").onclick = () => {
-      const startTime = tone.now();
-      AUDIO_INPUT.start(startTime);
-      AUDIO_TRANSCRIPTION.start(startTime);
+      const now = tone.now();
+      AUDIO_INPUT.start(now);
+      AUDIO_TRANSCRIPTION.start(now);
+    };
+    document.getElementById("audio-stop").onclick = () => {
+      const now = tone.now();
+      AUDIO_INPUT.stop(now);
+      AUDIO_TRANSCRIPTION.stop(now);
     };
     const crossfadeEl = document.getElementById("audio-crossfade");
     function onCrossfadeInput() {
@@ -183,6 +197,14 @@
         const selectedIndex = selectEl.selectedIndex;
         if (selectedIndex > 0) {
           const jid = selectEl.options[selectedIndex].value;
+          const otherSelectEl = document.getElementById(
+            `${name === "fresh" ? "rotten" : "fresh"}-cherries`
+          );
+          otherSelectEl.selectedIndex = 0;
+          const radioEls = document.getElementsByName("ryy08-radio");
+          for (let b = 0; b < radioEls.length; ++b) {
+            radioEls[b].checked = false;
+          }
           const zipUri = `${rootUri}/${jid}.zip`;
           display(cherryPromises(zipUri));
         }
@@ -196,16 +218,21 @@
       .content;
     for (let i = 0; i < RYY08_METHODS.length; ++i) {
       const method = RYY08_METHODS[i];
-      const methodEl = ryy08MethodTemplate.cloneNode(true);
+      const methodEl = ryy08MethodTemplate.cloneNode(true).querySelector("tr");
       const methodNameEl = document.createElement("td");
       methodNameEl.innerHTML = RYY08_METHOD_TO_DISPLAY_HTML[method];
+      methodNameEl.className = "method-name";
       methodEl.appendChild(methodNameEl);
       for (let j = 0; j < RYY08_RWC_TAGS.length; ++j) {
         const rwcTag = RYY08_RWC_TAGS[j];
         const exampleEl = ryy08ExampleTemplate.cloneNode(true);
         const inputEl = exampleEl.querySelector("input");
         inputEl.onchange = () => {
-          display(ryy08Promises(method, rwcTag));
+          if (inputEl.checked) {
+            display(ryy08Promises(method, rwcTag));
+            document.getElementById("fresh-cherries").selectedIndex = 0;
+            document.getElementById("rotten-cherries").selectedIndex = 0;
+          }
         };
         methodEl.appendChild(exampleEl);
       }
