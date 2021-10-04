@@ -5,19 +5,19 @@
   let AUDIO_INPUT = null;
   let AUDIO_TRANSCRIPTION = null;
 
-  const FRESH_ROOT = `${STATIC_ROOT}/cherries/fresh`;
+  const FRESH_ROOT = `${STATIC_ROOT}cherries/fresh`;
   const FRESH_JIDS = ["beb17ca70917c6bcadec2b411e7530a1760a5441"];
   const FRESH_JID_TO_TITLE = {
     beb17ca70917c6bcadec2b411e7530a1760a5441: "The Weeknd - Blinding Lights"
   };
 
-  const ROTTEN_ROOT = `${STATIC_ROOT}/cherries/rotten`;
+  const ROTTEN_ROOT = `${STATIC_ROOT}cherries/rotten`;
   const ROTTEN_JIDS = ["e2a5d5fbf9ac0b4b21953f36bb962b85a79555d0"];
   const ROTTEN_JID_TO_TITLE = {
     e2a5d5fbf9ac0b4b21953f36bb962b85a79555d0: "Input recording out of tune"
   };
 
-  const RYY08_ROOT = `${STATIC_ROOT}/ryy08_comparison/qualitative`;
+  const RYY08_ROOT = `${STATIC_ROOT}ryy08_comparison/qualitative`;
   const RYY08_RWC_TAGS = [
     "pop-12",
     "pop-38",
