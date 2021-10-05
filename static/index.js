@@ -15,7 +15,7 @@ window.mobileCheck = function() {
 };
 
 (function(jszip, fileSaverSaveAs, tone) {
-  const STATIC_ROOT = "https://chrisdonahue.com/sheetsage-lbd/";
+  const STATIC_ROOT = "";
   const AUDIO_DYNAMIC_RANGE_DB = 33;
 
   let AUDIO_INPUT = null;
@@ -94,6 +94,9 @@ window.mobileCheck = function() {
     previewSpinnerEl.style.display = "none";
     if (successful) {
       previewEl.style.display = "block";
+      setTimeout(() => {
+        window.scrollTo(0, document.body.scrollHeight);
+      }, 100);
     }
   }
 
