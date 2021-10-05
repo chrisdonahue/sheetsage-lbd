@@ -22,16 +22,157 @@ window.mobileCheck = function() {
   let AUDIO_TRANSCRIPTION = null;
 
   const FRESH_ROOT = `${STATIC_ROOT}cherries/fresh`;
-  const FRESH_JIDS = ["beb17ca70917c6bcadec2b411e7530a1760a5441"];
-  const FRESH_JID_TO_TITLE = {
-    beb17ca70917c6bcadec2b411e7530a1760a5441: "The Weeknd - Blinding Lights"
-  };
+  const FRESH_JIDS = [
+    [
+      "c634775f1d5fc319f3e204e753eae0c8e38bd737",
+      "(2021, Hip hop, Male vox) Lil Nas X - Montero"
+    ],
+    [
+      "e6d76b6903457ae67deb3e0ea81e9be3e729dfe8",
+      "(2021, Pop, Female vox) Billie Eilish - Getting Older"
+    ],
+    [
+      "dca819387f0f738ce8714ad58f7898b6a8b24259",
+      "(2021, Pop, Male vox) BTS - Permission to Dance"
+    ],
+    [
+      "0cd1f39dde78d2a9be7c0630aa11179e98f61b76",
+      "(2021, Dance, Female vox) iyla - Strings"
+    ],
+    /*
+    [
+      "4a3e4ad581217ab0929576b1bc03fd4ef8649336",
+      "(2021, Synth pop, Male vox) Bo Burnham - Content"
+    ],
+    */
+    [
+      "d1db2cd8bb50472e6eb44eb60ff2c28461917281",
+      "(2020, Dance, Synth and female vox) KAYTRANADA - 10% ft. Kali Uchis"
+    ],
+    [
+      "beb17ca70917c6bcadec2b411e7530a1760a5441",
+      "(2020, Pop, Synth and male vox) The Weeknd - Blinding Lights"
+    ],
+    [
+      "a3d7e584f103e056f10f932cf10947bd05a3e60e",
+      "(2016, Soul, Male vox) Vulfpeck - Game Winner"
+    ],
+    /*
+    [
+      "56731ec77788cbd272dfef999060dc3cd3ce93f4",
+      "(2015, Synth pop, Male vox) BEKIND - Down With the king"
+    ],
+    [
+      "93ad79703e671815687d218b97e34d60b22c208e",
+      "(2015, Showtune, Male vox) 'You'll Be Back' from 'Hamilton'"
+    ],
+    [
+      "d6217e82e935c7cc3bf9b98d487266be61da15c6",
+      "(2011, Bollywood, Male vox) 'Senorita' from 'Zindagi Na Milegi Dobara'"
+    ],
+    */
+    [
+      "4f0036820465c9987333eb398bad30c42f32d7bb",
+      "(2005, Pop, Female vox) Gorillaz - DARE"
+    ],
+    [
+      "b854a81c82e0e3e9473145373cf023ae35b5f67a",
+      "(2001, EDM, Guitar) Daft Punk - Something About Us"
+    ],
+    [
+      "6f0a216ed5e4bef6923a64b5b518fb14e161f30c",
+      "(2000, EDM, Synth) Darude - Sandstorm"
+    ],
+    [
+      "b0c7e56788d73018fb454229bbaee783225b1204",
+      "(2000, Pop, Female vox) Britney Spears - Lucky"
+    ],
+    [
+      "67f63d78150fc4c795a7b5df64373579df33ed20",
+      "(1998, Bollywood, Female vox) Title track from 'Kuch Kuch Hota Hai'"
+    ],
+    [
+      "078f7dba522bf89f15e1c103f71c54e632dc3495",
+      "(1996, Alt rock, Male vox) Oasis - Champagne Supernova"
+    ],
+    [
+      "8d3802805964b9365151b0bec7e6c6640fe6b828",
+      "(1989, 8-bit, Synth) Hirokazu Tanaka - Tetris Type A"
+    ],
+    [
+      "d55197cffcbc304a7c87df1bb214ef570652102a",
+      "(1984, Pop rock, Male vox) Queen - I Want To Break Free"
+    ],
+    [
+      "8b41011016ea784a5374bdfd28fd03ebf4b9920f",
+      "(1980, Pop, Female vox) Miki Matsubara - Stay With me"
+    ],
+    /*
+    [
+      "883009cf626be78354d7edb1732ddd83dcdf02c8",
+      "(1977, Folk rock, Male vox) Fleetwood Mac - Second Hand News"
+    ],
+    */
+    [
+      "fb5a7ccb3b3471f28ff12d318adff48a6477f2be",
+      "(1977, Folk rock, Female vox) Fleetwood Mac - Dreams"
+    ],
+    [
+      "f38e464aeac5a13f0bd02e2d2a50d64984cb5d17",
+      "(1972, Funk, Male vox) Stevie Wonder - Superstition"
+    ],
+    /*
+    [
+      "0b26f0eda0bce29029fd40f8371d923239b6a984",
+      "(1970, Folk rock, Male vox) Crosby, Stills, Nash & Young - Our House"
+    ],
+    */
+    [
+      "d467451831f01d8b4f905e9cec7582b5579b7ac2",
+      "(1966, Psych pop, Male vox / woodwinds / theremin) Beach Boys - I Just Wasn't Made For These Times"
+    ],
+    [
+      "de4f0b22f6a5cb6443adbb52c0ea422c2fa3dc67",
+      "(1953, Jazz, Saxophone) Charlie Parker - All The Things You Are"
+    ],
+    [
+      "a0cf33add7cde22a570570aad5d02160987a541f",
+      "(1875, Classical, Full orchestra) Grieg - In the Hall of the Mountain King"
+    ],
+    [
+      "c40f0e2c818057290013e3e5fc16ac95005857f8",
+      "(1722, Classical, Solo piano) Bach - Prelude No 2. in C Minor (BWV 847)"
+    ]
+  ];
+  const FRESH_DEFAULT = "beb17ca70917c6bcadec2b411e7530a1760a5441";
 
   const ROTTEN_ROOT = `${STATIC_ROOT}cherries/rotten`;
-  const ROTTEN_JIDS = ["e2a5d5fbf9ac0b4b21953f36bb962b85a79555d0"];
-  const ROTTEN_JID_TO_TITLE = {
-    e2a5d5fbf9ac0b4b21953f36bb962b85a79555d0: "Input recording out of tune"
-  };
+  const ROTTEN_JIDS = [
+    ["f1939a467c09f6d23ab10208710747e9890a1fdb", "Overly rhythmic"],
+    ["74a94d700d65a8e7a8629d4278372f162b36e50f", "Overly rhythmic"],
+    [
+      "a1e0b832fd1dfa6a3dcd35b2db1624e13635c5b9",
+      "Inconsistent transcriptions when input recording out of tune"
+    ],
+    [
+      "e2a5d5fbf9ac0b4b21953f36bb962b85a79555d0",
+      "Inconsistent transcriptions when input recording out of tune"
+    ],
+    ["708b4bd04a33f2de4fcba52320fd5fb2dba1f0b4", "Octave indecision"],
+    ["5b7616ae6e9ad035a93c5ec0975e72ff387b73fd", "Octave indecision"],
+    [
+      "4b0e64e72fc8a5c7b3880f126e59c7dc65f0e2b0",
+      "Issues tracking melody when multiple monophonic voices present"
+    ],
+    [
+      "4f1eabb53b972a7fe19b2e99c4a2ebbe7d05e32c",
+      "Poor recall for quiet vocals"
+    ],
+    [
+      "b49d21cc3cad2f000215f2f3db6badc1551e7ad2",
+      "Detected wrong time signature"
+    ]
+  ];
 
   const RYY08_ROOT = `${STATIC_ROOT}ryy08_comparison/qualitative`;
   const RYY08_RWC_TAGS = [
@@ -194,22 +335,22 @@ window.mobileCheck = function() {
 
     // Populate cherry selectors
     const ripenesses = [
-      ["fresh", FRESH_JIDS, FRESH_JID_TO_TITLE, FRESH_ROOT],
-      ["rotten", ROTTEN_JIDS, ROTTEN_JID_TO_TITLE, ROTTEN_ROOT]
+      ["fresh", FRESH_JIDS, FRESH_ROOT],
+      ["rotten", ROTTEN_JIDS, ROTTEN_ROOT]
     ];
     for (let r = 0; r < ripenesses.length; ++r) {
-      const [name, jids, jidToTitle, rootUri] = ripenesses[r];
+      const [name, jids, rootUri] = ripenesses[r];
       const selectEl = document.getElementById(`${name}-cherries`);
       const exampleTemplate = document.getElementById(`${name}-cherry-example`)
         .content;
       for (let i = 0; i < jids.length; ++i) {
-        const jid = jids[i];
+        const [jid, title] = jids[i];
         const exampleEl = exampleTemplate
           .cloneNode(true)
           .querySelector("option");
         exampleEl.value = jid;
-        exampleEl.innerHTML = jidToTitle[jid];
-        exampleEl.selected = r == 0 && i == 0;
+        exampleEl.innerHTML = title;
+        exampleEl.selected = jid === FRESH_DEFAULT;
         selectEl.appendChild(exampleEl);
       }
       selectEl.oninput = () => {
@@ -258,7 +399,7 @@ window.mobileCheck = function() {
       ryy08TableBodyEl.appendChild(methodEl);
     }
 
-    const defaultZipUri = `${FRESH_ROOT}/${FRESH_JIDS[0]}.zip`;
+    const defaultZipUri = `${FRESH_ROOT}/${FRESH_DEFAULT}.zip`;
     display(cherryPromises(defaultZipUri));
 
     if (window.mobileCheck()) {
