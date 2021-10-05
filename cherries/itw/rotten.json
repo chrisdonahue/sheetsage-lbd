@@ -1,0 +1,24 @@
+    ["f1939a467c09f6d23ab10208710747e9890a1fdb", "Overly rhythmic"],
+    ["74a94d700d65a8e7a8629d4278372f162b36e50f", "Overly rhythmic"],
+    [
+      "a1e0b832fd1dfa6a3dcd35b2db1624e13635c5b9",
+      "Inconsistent transcriptions when input recording out of tune"
+    ],
+    [
+      "e2a5d5fbf9ac0b4b21953f36bb962b85a79555d0",
+      "Inconsistent transcriptions when input recording out of tune"
+    ],
+    ["708b4bd04a33f2de4fcba52320fd5fb2dba1f0b4", "Octave indecision"],
+    ["5b7616ae6e9ad035a93c5ec0975e72ff387b73fd", "Octave indecision"],
+    [
+      "4b0e64e72fc8a5c7b3880f126e59c7dc65f0e2b0",
+      "Issues tracking melody when multiple monophonic voices present"
+    ],
+    [
+      "4f1eabb53b972a7fe19b2e99c4a2ebbe7d05e32c",
+      "Poor recall for quiet vocals"
+    ],
+    [
+      "b49d21cc3cad2f000215f2f3db6badc1551e7ad2",
+      "Detected wrong time signature"
+    ]
