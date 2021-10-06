@@ -15,163 +15,145 @@ window.mobileCheck = function() {
 };
 
 (function(jszip, fileSaverSaveAs, tone) {
-  const STATIC_ROOT = "";
+  const STATIC_ROOT = "https://chrisdonahue.com/sheetsage-lbd/";
   const AUDIO_DYNAMIC_RANGE_DB = 33;
 
   let AUDIO_INPUT = null;
-  let AUDIO_TRANSCRIPTION = null;
+  let AUDIO_TRANSCRIPTION_REF = null;
+  let AUDIO_TRANSCRIPTION_EST = null;
 
-  const FRESH_ROOT = `${STATIC_ROOT}cherries/fresh`;
-  const FRESH_JIDS = [
+  const FRESH_ROOT = `${STATIC_ROOT}cherries/hooktheory_test`;
+  const FRESH_UIDS = [
+    // Great
+    ["ZbgOKGNQgnY", "Jamiroquai - Space Cowboy"],
+    ["ZbgOKN_bgnY", "Justice - Valentine"],
+    ["KexENQwVo_B", "Black Eyed Peas - Rock That Body"],
+    ["nJmBWEQbgAV", "B E R - The Night Begins To Shine"],
+    ["knJmBjQbmAV", "Birds Of Tokyo - Lanterns"],
+    ["KexEeDBXx_B", "Rilo Kiley - Breakin Up"],
+    ["JNgqMEZrgrz", "Ichika Nito - Easy Chords To Beautiful Chords"],
+    ["yvgPqrqYxYq", "Adele - Rolling In The Deep"],
+    ["Dpgv-lbOmad", "Terribletim - Brotherman Bill"],
+    ["kygzRODngKB", "Yasuharu Takanashi - Fairy Tail   Main Theme"],
+    ["nJmBvnApmAV", "Toby Fox - Save The World"],
+    ["nYAg-vvaxle", "Kyary Pamyu Pamyu - Fashion Monster"],
+    ["ROmNAYrBoNw", "Ogge - Kuk"],
+    ["kygzAAYPmKB", "Rotmg - Realm Of The Mad God Main Theme"],
+    ["ZwxKqeeGmed", "Toby Fox - Shop"],
+    ["nvgyWWAeokA", "Mini Pati - Hirari Kirakira Yami Yami Museum"],
+    ["nLgaWMLzoYp", "Johnny Clegg And Savuka - Dela"],
     [
-      "c634775f1d5fc319f3e204e753eae0c8e38bd737",
-      "(2021, Hip hop, Male vox) Lil Nas X - Montero"
+      "-WeglnzlorY",
+      "Florence And The Machine - Spectrum   Calvin Harris Remix"
     ],
+    ["nJmBvqe_mAV", "Utada Hikaru - Come Back To Me"],
+    ["Abm_dXGAgak", "The Chainsmokers - Closer Ft Halsey"],
+    ["QLgnRMBvg-V", "Rustie - Hover Traps"],
+    ["ROmNwDdQgNw", "Patrick Hernandez - Born To Be Alive"],
+    ["DpgvvYekgad", "Armanarx - Syahrini Sticker Vs Armanarx Sticker"],
+    ["jDgXNadyoKl", "Armanarx - Tolong Jangan Nangis Bayi"],
+    ["WAbm_Ybwxak", "Masashi Hamauzu - Yeuls Theme"],
+    ["ROmN-aRQoNw", "Rustie - Big Catzz"],
+    ["nJmBXa_WxAV", "Kyary Pamyu Pamyu - Kimino Mikata"],
+    ["VMgJvvAVgqK", "Daft Punk - Contact"],
+    ["dPoD-GGXmnM", "Dropgun - Nothing New"],
+    ["lamkNLYVoDM", "The Quiet Revolution - Parallel Me"],
+    ["RPxeqbyaxb_", "Toby Fox - Last Goodbye"],
+    ["QLgnMbYvm-V", "Kelly Rowland - Work"],
+    ["nZgWwk_Bgry", "Sanah - 2 00"],
+    ["Rzoj_pdQmDe", "Awesomeguy - Nyan Cat"],
+    ["veoYqPLqodn", "Itzy - Wannabe"],
+    ["jDgXkrvNmKl", "Counting Crows - Accidentally In Love"],
+    ["nZgWA-Awory", "King Crimson - In The Wake Of Poseidon"],
+    ["veoYqYPVodn", "Matchbox 20 - Unwell"],
+    ["d_gwjNYbmGV", "De Jeugd Van Tegenwoordig - Sterrenstof"],
+    ["d_gwOYdKgGV", "Era - Ameno"],
+    ["YRzojlaMgDe", "The Cars - Just What I Needed"],
+    ["nvgyqzyrgkA", "Sanah - 2 00"],
+    ["ZbgOaGXbonY", "A Teens - Halfway Around The World"],
+    ["bWgMEaPEglX", "Antonim - Melancholy Soldier"],
+    ["nLgaqEOZgYp", "Hirokazu Ando - Butter Building   Kirbys Adventure"],
+    ["nJmBkArEgAV", "Santigold - The Keepers"],
+    ["AQodYy_YmDl", "Kyary Pamyu Pamyu - Harajuku Iyahoi"],
+    ["d_gwLQdbxGV", "Adele - Set Fire To The Rain"],
+    ["kwxAaqNXxKG", "Ikimono Gakari - Blue Bird"],
+    ["NlamkNNeoDM", "Erasure - Always"],
+    ["yvmrlnWvxOW", "Daft Punk - Giorgio By Moroder"],
+    ["eWxLnadKmaK", "Azedia - Something"],
+    ["dVMgJMyWmqK", "Keane Vs Basto - Bend And Break"],
+    ["dZbgOqBwonY", "Van Morrison - Brown Eyed Girl"],
+    ["l_NgbbVYgQA", "Avicii - Dear Boy"],
+    ["jDgXqYWnxKl", "Toby Fox - Core"],
+    ["kygzpzjPoKB", "Rilo Kiley - Breakin Up"],
+    ["ZwxKJqwDged", "Shontelle - Impossible"],
+    ["nJmBJQq_mAV", "Pitbull - Feel This Moment Feat Christina Aguilera"],
+    ["nvgy-Ew_gkA", "Rick Astley - Never Gonna Give You Up"],
+    ["DpgvNplLgad", "Mini Pati - Acha Cha Kare"],
+    ["AaoGXKrJmeQ", "Mungo Jerry - In The Summertime"],
+    ["lamkzMlVoDM", "Cher - Half Breed"],
+    ["VMgJjqYygqK", "Linda Perhacs - Hey Who Really Cares"],
+    ["zngRKykpxJj", "Armanarx - Lky Fansku Tapi Hatersku"],
+    ["ZwxKJLMDged", "Kyu Sakamoto - Sukiyaki"],
+
+    // Okay
+    ["JNgqAVWJgrz", "Akira Yamaoka - Pianissimo Epilogue"],
+    ["KexEjaZOo_B", "Corinne Bailey Rae - Put Your Records On"],
+    ["d_gwAAeAoGV", "Red Vox - Reno"],
+    ["nvgydNDRmkA", "Santigold - Disparate Youth"],
+    ["JNgqBVlWxrz", "Dusty Springfield - I Only Want To Be With You"],
+    ["zngRJLaMgJj", "Murray Gold - The Doctors Theme Series 4"],
     [
-      "e6d76b6903457ae67deb3e0ea81e9be3e729dfe8",
-      "(2021, Pop, Female vox) Billie Eilish - Getting Older"
+      "-WeglvXYorY",
+      "Gary Portnoy - Where Everybody Knows Your Name   Cheers Theme"
     ],
-    [
-      "dca819387f0f738ce8714ad58f7898b6a8b24259",
-      "(2021, Pop, Male vox) BTS - Permission to Dance"
-    ],
-    [
-      "0cd1f39dde78d2a9be7c0630aa11179e98f61b76",
-      "(2021, Dance, Female vox) iyla - Strings"
-    ],
-    /*
-    [
-      "4a3e4ad581217ab0929576b1bc03fd4ef8649336",
-      "(2021, Synth pop, Male vox) Bo Burnham - Content"
-    ],
-    */
-    [
-      "d1db2cd8bb50472e6eb44eb60ff2c28461917281",
-      "(2020, Dance, Synth and female vox) KAYTRANADA - 10% ft. Kali Uchis"
-    ],
-    [
-      "beb17ca70917c6bcadec2b411e7530a1760a5441",
-      "(2020, Pop, Synth and male vox) The Weeknd - Blinding Lights"
-    ],
-    [
-      "a3d7e584f103e056f10f932cf10947bd05a3e60e",
-      "(2016, Soul, Male vox) Vulfpeck - Game Winner"
-    ],
-    /*
-    [
-      "56731ec77788cbd272dfef999060dc3cd3ce93f4",
-      "(2015, Synth pop, Male vox) BEKIND - Down With the king"
-    ],
-    [
-      "93ad79703e671815687d218b97e34d60b22c208e",
-      "(2015, Showtune, Male vox) 'You'll Be Back' from 'Hamilton'"
-    ],
-    [
-      "d6217e82e935c7cc3bf9b98d487266be61da15c6",
-      "(2011, Bollywood, Male vox) 'Senorita' from 'Zindagi Na Milegi Dobara'"
-    ],
-    */
-    [
-      "4f0036820465c9987333eb398bad30c42f32d7bb",
-      "(2005, Pop, Female vox) Gorillaz - DARE"
-    ],
-    [
-      "b854a81c82e0e3e9473145373cf023ae35b5f67a",
-      "(2001, EDM, Guitar) Daft Punk - Something About Us"
-    ],
-    [
-      "6f0a216ed5e4bef6923a64b5b518fb14e161f30c",
-      "(2000, EDM, Synth) Darude - Sandstorm"
-    ],
-    [
-      "b0c7e56788d73018fb454229bbaee783225b1204",
-      "(2000, Pop, Female vox) Britney Spears - Lucky"
-    ],
-    [
-      "67f63d78150fc4c795a7b5df64373579df33ed20",
-      "(1998, Bollywood, Female vox) Title track from 'Kuch Kuch Hota Hai'"
-    ],
-    [
-      "078f7dba522bf89f15e1c103f71c54e632dc3495",
-      "(1996, Alt rock, Male vox) Oasis - Champagne Supernova"
-    ],
-    [
-      "8d3802805964b9365151b0bec7e6c6640fe6b828",
-      "(1989, 8-bit, Synth) Hirokazu Tanaka - Tetris Type A"
-    ],
-    [
-      "d55197cffcbc304a7c87df1bb214ef570652102a",
-      "(1984, Pop rock, Male vox) Queen - I Want To Break Free"
-    ],
-    [
-      "8b41011016ea784a5374bdfd28fd03ebf4b9920f",
-      "(1980, Pop, Female vox) Miki Matsubara - Stay With me"
-    ],
-    /*
-    [
-      "883009cf626be78354d7edb1732ddd83dcdf02c8",
-      "(1977, Folk rock, Male vox) Fleetwood Mac - Second Hand News"
-    ],
-    */
-    [
-      "fb5a7ccb3b3471f28ff12d318adff48a6477f2be",
-      "(1977, Folk rock, Female vox) Fleetwood Mac - Dreams"
-    ],
-    [
-      "f38e464aeac5a13f0bd02e2d2a50d64984cb5d17",
-      "(1972, Funk, Male vox) Stevie Wonder - Superstition"
-    ],
-    /*
-    [
-      "0b26f0eda0bce29029fd40f8371d923239b6a984",
-      "(1970, Folk rock, Male vox) Crosby, Stills, Nash & Young - Our House"
-    ],
-    */
-    [
-      "d467451831f01d8b4f905e9cec7582b5579b7ac2",
-      "(1966, Psych pop, Male vox / woodwinds / theremin) Beach Boys - I Just Wasn't Made For These Times"
-    ],
-    [
-      "de4f0b22f6a5cb6443adbb52c0ea422c2fa3dc67",
-      "(1953, Jazz, Saxophone) Charlie Parker - All The Things You Are"
-    ],
-    [
-      "a0cf33add7cde22a570570aad5d02160987a541f",
-      "(1875, Classical, Full orchestra) Grieg - In the Hall of the Mountain King"
-    ],
-    [
-      "c40f0e2c818057290013e3e5fc16ac95005857f8",
-      "(1722, Classical, Solo piano) Bach - Prelude No 2. in C Minor (BWV 847)"
-    ]
+    ["bWgM-ENJglX", "Yuki Kajiura - Decretum   Puella Magi Madoka Magica"],
+    ["AROmNPLnxNw", "Iron Maiden - No More Lies"],
+    ["jDgXQJbexKl", "Spongebob Squarepants - A Day Like This"],
+    ["d_gwjEeAmGV", "The 88 - At Least It Was Here"],
+    ["WeglPWZagrY", "Pitbull - Give Me Everything"],
+    ["ROmNvBLpmNw", "Mid Air Thief - Swamp"],
+    ["VMgJkMJkxqK", "Imogen Heap - Goodnight And Go"],
+    ["kygzpEyLoKB", "Kasabian - La Fee Verte"],
+    ["KexEQ-qVx_B", "Airbag - Sounds That I Hear"],
+    ["kwxAXbnDgKG", "Aura Dione - Friends   Piano Cover"],
+    ["VMgJRzqEgqK", "Adele - Skyfall"],
+    ["ANmprnY-xyM", "Gary Jules - Mad World"],
+    ["lamkXwlwgDM", "Phoenix - Lisztomania"],
+    ["JkmZQWBkoqn", "Adele - Send My Love"],
+    ["ROmNwArngNw", "Red Velvet - Time Slip"],
+    ["KyvmrnezmOW", "Junior Boys - First Time"],
+    ["zngRZPAVgJj", "Hyper Potions - Little Root Town"],
+    ["ANmpeqjngyM", "Foster The People - Pumped Up Kicks"]
   ];
-  const FRESH_DEFAULT = "beb17ca70917c6bcadec2b411e7530a1760a5441";
+  const FRESH_DEFAULT = "ZbgOKGNQgnY";
 
-  const ROTTEN_ROOT = `${STATIC_ROOT}cherries/rotten`;
-  const ROTTEN_JIDS = [
-    ["f1939a467c09f6d23ab10208710747e9890a1fdb", "Overly rhythmic"],
-    ["74a94d700d65a8e7a8629d4278372f162b36e50f", "Overly rhythmic"],
-    [
-      "a1e0b832fd1dfa6a3dcd35b2db1624e13635c5b9",
-      "Inconsistent transcriptions when input recording out of tune"
-    ],
-    [
-      "e2a5d5fbf9ac0b4b21953f36bb962b85a79555d0",
-      "Inconsistent transcriptions when input recording out of tune"
-    ],
-    ["708b4bd04a33f2de4fcba52320fd5fb2dba1f0b4", "Octave indecision"],
-    ["5b7616ae6e9ad035a93c5ec0975e72ff387b73fd", "Octave indecision"],
-    [
-      "4b0e64e72fc8a5c7b3880f126e59c7dc65f0e2b0",
-      "Issues tracking melody when multiple monophonic voices present"
-    ],
-    [
-      "4f1eabb53b972a7fe19b2e99c4a2ebbe7d05e32c",
-      "Poor recall for quiet vocals"
-    ],
-    [
-      "b49d21cc3cad2f000215f2f3db6badc1551e7ad2",
-      "Detected wrong time signature"
-    ]
+  const ROTTEN_ROOT = `${STATIC_ROOT}cherries/hooktheory_test`;
+  const ROTTEN_UIDS = [
+    // Bad but interesting
+    ["d_gw-dDKoGV", "The Neighbourhood - Cry Baby"],
+    ["LAgQVk-ExyO", "Toby Fox - The Field Of Hopes And Dreams"],
+    ["AQodyANqmDl", "Wizet - Maplestory   Cash Shop"],
+    ["kwxAaGaDxKG", "Regina Spektor - Folding Chairs"],
+    ["RPxen-ZLob_", "Jay Ferguson - The Office Opening Theme"],
+    ["eWxLvZakmaK", "The Chainsmokers - Paris"],
+    ["KexENydVo_B", "Asgeir - King And Cross"],
+    ["nLgaJ_PdxYp", "Wilco - Shes A Jar"],
+    ["WeglvbraorY", "Hirokazu Ando - Orange Ocean   Kirbys Adventure"],
+    ["veWxLDW_xaK", "Virtual Riot - Energy Drink"],
+    ["YAg-qOnBgle", "The Weather Girls - Its Raining Men"],
+    ["JNgqOeBnorz", "Stan Sb - Dead"],
+    ["bWgMwlkPolX", "Nancy Sinatra - These Boots Are Made For Walkin"],
+    ["Rzoj_qYAmDe", "George Frideric Handel - Messiah   Hallelujah Chorus"],
+    ["yvgP_MyLmYq", "Hot Dad - Hypnospace Is Cool"],
+    ["yvgPKq_AmYq", "Calvin Harris And Disciples - How Deep Is Your Love"],
+    ["RPxeyqnqxb_", "Ogge - Kuk"],
+    ["YAg-PdPamle", "Johnfn - I Can See You Now"],
+    ["wnvgyyz-gkA", "Counting Crows - Anna Begins"],
+    ["AQodXnlBoDl", "Gary Jules - Mad World"],
+    ["kwxAwp-QmKG", "Manfred Mann - Doo Wah Diddy Diddy"],
+    ["nvgyAW-XgkA", "Keri Hilson - Lose Control"],
+    ["lamkGvzvmDM", "Joanna Newsom - Sapokanikan"],
+    ["ZbgOYnM-onY", "Arseniy Shkljaev - Nuclearoids"]
   ];
 
   const RYY08_ROOT = `${STATIC_ROOT}ryy08_comparison/qualitative`;
@@ -187,17 +169,16 @@ window.mobileCheck = function() {
     "genre-66",
     "genre-70"
   ];
-  const RYY08_METHODS = ["ref", "mel", "spt", "ryy", "ssh", "ssj"];
+  const RYY08_METHODS = ["mel", "spt", "ryy", "ssh", "ssj"];
   const RYY08_METHOD_TO_DISPLAY_HTML = {
-    ref: "Author-transcribed reference",
     mel:
-      '<a href="https://www.upf.edu/web/mtg/melodia" target="_blank">Melody extraction</a> + <a href="https://github.com/justinsalamon/audio_to_midi_melodia" target="_blank">Segmentation</a>',
+      '<a href="https://github.com/justinsalamon/audio_to_midi_melodia" target="_blank">Melody extraction + Segmentation</a>',
     spt:
       '<a href="https://github.com/deezer/spleeter" target="_blank">Vocal isolation</a> + <a href="https://www.sonicvisualiser.org/tony/" target="_blank">Transcription</a>',
     ryy:
-      '<a href="https://web.archive.org/web/20081115212058/http://www.cs.tut.fi/sgn/arg/matti/demos/mbctrans/" target="_blank">Features + HMM</a>',
+      '<a href="https://web.archive.org/web/20081115212058/http://www.cs.tut.fi/sgn/arg/matti/demos/mbctrans/" target="_blank">DSP features + HMM</a>',
     ssh:
-      '<a href="https://github.com/magenta/magenta/blob/9885adef56d134763a89de5584f7aa18ca7d53b6/magenta/models/onsets_frames_transcription/data.py#L89" target="_blank">Spectrogram</a> + Transformer',
+      '<a href="https://github.com/magenta/magenta/blob/9885adef56d134763a89de5584f7aa18ca7d53b6/magenta/modsourcesets_frames_transcription/data.py#L89" target="_blank">Spectrogram</a> + Transformer',
     ssj:
       'Sheet Sage (<a href="https://github.com/openai/jukebox" target="_blank">Jukebox</a> + Transformer)'
   };
@@ -210,26 +191,33 @@ window.mobileCheck = function() {
     previewEl.style.display = "none";
     const now = tone.now();
     AUDIO_INPUT.stop(now);
-    AUDIO_TRANSCRIPTION.stop(now);
+    AUDIO_TRANSCRIPTION_REF.stop(now);
+    AUDIO_TRANSCRIPTION_EST.stop(now);
 
     let successful = false;
     try {
       const [
         inputAudioMP3,
-        transcriptionAudioMP3,
-        transcriptionScorePNG
+        transcriptionRefAudioMP3,
+        transcriptionRefScorePNG,
+        transcriptionEstAudioMP3,
+        transcriptionEstScorePNG
       ] = await promises;
       const inputAudio = `data:audio/mpeg;base64,${inputAudioMP3}`;
-      const transcriptionAudio = `data:audio/mpeg;base64,${transcriptionAudioMP3}`;
-      const transcriptionScore = `data:image/png;base64,${transcriptionScorePNG}`;
+      const transcriptionRefAudio = `data:audio/mpeg;base64,${transcriptionRefAudioMP3}`;
+      const transcriptionRefScore = `data:image/png;base64,${transcriptionRefScorePNG}`;
+      const transcriptionEstAudio = `data:audio/mpeg;base64,${transcriptionEstAudioMP3}`;
+      const transcriptionEstScore = `data:image/png;base64,${transcriptionEstScorePNG}`;
       await Promise.all([
         AUDIO_INPUT.load(inputAudio),
-        AUDIO_TRANSCRIPTION.load(transcriptionAudio)
+        AUDIO_TRANSCRIPTION_REF.load(transcriptionRefAudio),
+        AUDIO_TRANSCRIPTION_EST.load(transcriptionEstAudio)
       ]);
-      document.getElementById("score").src = transcriptionScore;
+      document.getElementById("score-ref").src = transcriptionRefScore;
+      document.getElementById("score-est").src = transcriptionEstScore;
       successful = true;
     } catch {
-      alert("Failed to load example for some reason. Please contact Chris.");
+      alert("Failed to load example. Please try again or contact Chris.");
     }
 
     previewSpinnerEl.style.display = "none";
@@ -264,6 +252,8 @@ window.mobileCheck = function() {
 
     return Promise.all([
       fetchBase64FromUri(`${RYY08_ROOT}/${rwcTag}.mp3`),
+      fetchBase64FromUri(`${RYY08_ROOT}/${rwcTag}_ref_off1.mp3`),
+      fetchBase64FromUri(`${RYY08_ROOT}/${rwcTag}_ref_off1.png`),
       fetchBase64FromUri(`${RYY08_ROOT}/${rwcTag}_${method}_off1.mp3`),
       fetchBase64FromUri(`${RYY08_ROOT}/${rwcTag}_${method}_off1.png`)
     ]);
@@ -283,6 +273,8 @@ window.mobileCheck = function() {
       .then(zip => {
         return Promise.all([
           zip.file("input.mp3").async("base64"),
+          zip.file("transcription_ref.mp3").async("base64"),
+          zip.file("transcription_ref.png").async("base64"),
           zip.file("transcription.mp3").async("base64"),
           zip.file("transcription.png").async("base64")
         ]);
@@ -292,29 +284,62 @@ window.mobileCheck = function() {
   async function onDomReady() {
     // Initialize audio chain
     AUDIO_INPUT = new tone.Player();
-    AUDIO_TRANSCRIPTION = new tone.Player();
-    const audioCrossfade = new tone.CrossFade(0.5);
-    const audioVolume = new tone.Volume(0);
-    AUDIO_INPUT.connect(audioCrossfade.a);
-    AUDIO_TRANSCRIPTION.connect(audioCrossfade.b);
-    audioCrossfade.connect(audioVolume);
-    audioVolume.toDestination();
+    AUDIO_TRANSCRIPTION_REF = new tone.Player();
+    AUDIO_TRANSCRIPTION_EST = new tone.Player();
+    const transcriptionCrossfade = new tone.CrossFade(0);
+    const inputTranscriptionCrossfade = new tone.CrossFade(0.5);
+    const volume = new tone.Volume(0);
+    AUDIO_INPUT.connect(inputTranscriptionCrossfade.a);
+    AUDIO_TRANSCRIPTION_REF.connect(transcriptionCrossfade.a);
+    AUDIO_TRANSCRIPTION_EST.connect(transcriptionCrossfade.b);
+    transcriptionCrossfade.connect(inputTranscriptionCrossfade.b);
+    inputTranscriptionCrossfade.connect(volume);
+    volume.toDestination();
 
     // Initialize audio UI
     document.getElementById("audio-play").onclick = () => {
       const now = tone.now();
       AUDIO_INPUT.start(now);
-      AUDIO_TRANSCRIPTION.start(now);
+      AUDIO_TRANSCRIPTION_REF.start(now);
+      AUDIO_TRANSCRIPTION_EST.start(now);
     };
     document.getElementById("audio-stop").onclick = () => {
       const now = tone.now();
       AUDIO_INPUT.stop(now);
-      AUDIO_TRANSCRIPTION.stop(now);
+      AUDIO_TRANSCRIPTION_REF.stop(now);
+      AUDIO_TRANSCRIPTION_EST.stop(now);
     };
+    const transcriptionSourceEls = document.getElementsByName(
+      "transcription-source"
+    );
+    function onTranscriptionSourceInput() {
+      let rel = 0;
+      for (let i = 0; i < transcriptionSourceEls.length; ++i) {
+        if (transcriptionSourceEls[i].checked) {
+          const isEst = Number(transcriptionSourceEls[i].value);
+          if (isEst) {
+            document.getElementById("score-ref").className = "score";
+            document.getElementById("score-est").className =
+              "score selected-transcription";
+          } else {
+            document.getElementById("score-ref").className =
+              "score selected-transcription";
+            document.getElementById("score-est").className = "score";
+          }
+          rel = isEst;
+          break;
+        }
+      }
+      transcriptionCrossfade.fade.rampTo(rel);
+    }
+    for (let i = 0; i < transcriptionSourceEls.length; ++i) {
+      transcriptionSourceEls[i].oninput = onTranscriptionSourceInput;
+    }
+    onTranscriptionSourceInput();
     const crossfadeEl = document.getElementById("audio-crossfade");
     function onCrossfadeInput() {
       const crossfadeRel = crossfadeEl.value / crossfadeEl.max;
-      audioCrossfade.fade.rampTo(crossfadeRel);
+      inputTranscriptionCrossfade.fade.rampTo(crossfadeRel);
     }
     onCrossfadeInput();
     crossfadeEl.oninput = onCrossfadeInput;
@@ -322,10 +347,10 @@ window.mobileCheck = function() {
     function onVolumeInput() {
       const volumeRel = volumeEl.value / volumeEl.max;
       if (volumeRel <= 0) {
-        audioVolume.mute = true;
+        volume.mute = true;
       } else {
-        audioVolume.mute = false;
-        audioVolume.volume.rampTo(
+        volume.mute = false;
+        volume.volume.rampTo(
           (Math.min(volumeRel, 1) - 1) * AUDIO_DYNAMIC_RANGE_DB
         );
       }
@@ -335,22 +360,28 @@ window.mobileCheck = function() {
 
     // Populate cherry selectors
     const ripenesses = [
-      ["fresh", FRESH_JIDS, FRESH_ROOT],
-      ["rotten", ROTTEN_JIDS, ROTTEN_ROOT]
+      ["fresh", FRESH_UIDS, FRESH_ROOT],
+      ["rotten", ROTTEN_UIDS, ROTTEN_ROOT]
     ];
     for (let r = 0; r < ripenesses.length; ++r) {
-      const [name, jids, rootUri] = ripenesses[r];
+      const [name, uids, rootUri] = ripenesses[r];
       const selectEl = document.getElementById(`${name}-cherries`);
       const exampleTemplate = document.getElementById(`${name}-cherry-example`)
         .content;
-      for (let i = 0; i < jids.length; ++i) {
-        const [jid, title] = jids[i];
+      for (let i = 0; i < uids.length; ++i) {
+        let uid = uids[i];
+        let title;
+        if (uid.length === 2) {
+          [uid, title] = uid;
+        } else {
+          title = uid;
+        }
         const exampleEl = exampleTemplate
           .cloneNode(true)
           .querySelector("option");
-        exampleEl.value = jid;
+        exampleEl.value = uid;
         exampleEl.innerHTML = title;
-        exampleEl.selected = jid === FRESH_DEFAULT;
+        exampleEl.selected = uid === FRESH_DEFAULT;
         selectEl.appendChild(exampleEl);
       }
       selectEl.oninput = () => {
@@ -399,8 +430,10 @@ window.mobileCheck = function() {
       ryy08TableBodyEl.appendChild(methodEl);
     }
 
-    const defaultZipUri = `${FRESH_ROOT}/${FRESH_DEFAULT}.zip`;
-    display(cherryPromises(defaultZipUri));
+    if (FRESH_DEFAULT !== null) {
+      const defaultZipUri = `${FRESH_ROOT}/${FRESH_DEFAULT}.zip`;
+      display(cherryPromises(defaultZipUri));
+    }
 
     if (window.mobileCheck()) {
       document.getElementById("mobile-warning").style.display = "block";

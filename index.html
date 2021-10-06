@@ -44,7 +44,7 @@
   <body>
     <div id="main">
       <div id="header">
-        <h2>🎼 <i>Sheet Sage</i> Sound Examples</h2>
+        <h2>🎼 <i>Sheet Sage</i> Examples</h2>
         <h3>
           <a href="https://chrisdonahue.com" target="_blank">Chris Donahue</a>
           and
@@ -60,26 +60,31 @@
       <div id="body-loading" class="spinner"></div>
       <div id="body" style="display:none;">
         <div id="choose-example">
-          <div id="fresh-cherry">
+          <div id="cherry">
             <h3>
-              🍒 Examples transcribed by Sheet Sage (none in training set)
+              🎶 Lead sheets transcribed by Sheet Sage (from the Hooktheory test
+              set)
             </h3>
-            <template id="fresh-cherry-example">
-              <option></option>
-            </template>
-            <select id="fresh-cherries">
-              <option>Select an example...</option>
-            </select>
-          </div>
 
-          <div id="rotten-cherry">
-            <h3>🚧 Examples where Sheet Sage needs improvement</h3>
-            <template id="rotten-cherry-example">
-              <option></option>
-            </template>
-            <select id="rotten-cherries">
-              <option>Select an example...</option>
-            </select>
+            <div id="fresh-cherry">
+              <label>🍒 Good</label>
+              <template id="fresh-cherry-example">
+                <option></option>
+              </template>
+              <select id="fresh-cherries">
+                <option>Select an example...</option>
+              </select>
+            </div>
+
+            <div id="rotten-cherry">
+              <label>🍋 Bad</label>
+              <template id="rotten-cherry-example">
+                <option></option>
+              </template>
+              <select id="rotten-cherries">
+                <option>Select an example...</option>
+              </select>
+            </div>
           </div>
 
           <div id="ryy08">
@@ -90,6 +95,7 @@
                 >reproduce</a
               >)
             </h3>
+
             <template id="ryy08-method">
               <tr></tr>
             </template>
@@ -117,9 +123,16 @@
           </div>
         </div>
 
-        <div id="preview-loading" class="spinner"></div>
+        <div id="preview-loading" class="spinner" style="display:none;"></div>
         <div id="preview" style="display:none;">
           <hr />
+          <div id="transcription-source-ui">
+            <label>Transcription</label>
+            <span>Estimated</span>
+            <input type="radio" name="transcription-source" value="1" checked />
+            <span>Reference</span>
+            <input type="radio" name="transcription-source" value="0" />
+          </div>
           <div id="audio-ui">
             <label>Audio Preview</label>
             <div class="audio-transport" id="audio-play">
@@ -143,11 +156,13 @@
               id="audio-crossfade"
               min="0"
               max="1000"
-              value="750"
+              value="500"
             />
+            <span>Transcription</span>
           </div>
           <div id="score-ui">
-            <img id="score" />
+            <img class="score" id="score-est" />
+            <img class="score" id="score-ref" />
           </div>
         </div>
       </div>

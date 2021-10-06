@@ -53,3 +53,17 @@ td:not(.method-name) {
     -webkit-transform: rotate(360deg);
   }
 }
+
+label {
+  font-weight: bold;
+}
+
+.score {
+  margin: 4px;
+  padding: 4px;
+  border: 4px solid transparent;
+}
+
+.selected-transcription {
+  border: 4px solid blue;
+}
