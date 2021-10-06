@@ -67,3 +67,17 @@ label {
 .selected-transcription {
   border: 4px solid blue;
 }
+
+.cherry-container {
+  margin: 8px;
+}
+
+.cherry-container select {
+  width: 500px;
+}
+
+.cherry-container .label {
+  width: 80px;
+  display: inline-block;
+}
+
